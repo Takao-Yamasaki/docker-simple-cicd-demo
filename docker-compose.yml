@@ -17,6 +17,8 @@ services:
       - 3000:3000
     # -tオプションと同じ。bashがすぐに終了するのを防ぐ
     tty: true
+    environment:
+      - REACT_APP_API_SERVER=http://localhost:8080/api
     volumes:
       - ./web:/workspace:cashed
     depends_on:
