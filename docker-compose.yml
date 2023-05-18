@@ -12,7 +12,9 @@ services:
   
   web:
     container_name: web
-    build: ./web
+    build: 
+      context: ./web
+      target: base
     ports:
       - 3000:3000
     # -tオプションと同じ。bashがすぐに終了するのを防ぐ
