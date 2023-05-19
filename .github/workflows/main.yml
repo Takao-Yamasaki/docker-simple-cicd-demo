@@ -1,0 +1,35 @@
+name: Delploy Simple CI/CD
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  AWS_REGION: ap-north-east
+  ECS_SERVICE: simple-cicd-service
+  ECS_CLUSTER: simple-cicd-cluster
+  ECS_TASK_DEFINITION: .aws/task-definition.json
+
+permissions:
+  contents: read
+
+jobs:
+  # Web Container Build/Test
+  ## Get Source
+  ## Build/Test
+  ## Docker Imame Build
+  ## Login AWS
+  ## Push Image to ECR
+
+  # API Container Build/Test
+  ## Get Source
+  ## Build/Test
+  ## Docker Imame Build
+  ## Login AWS
+  ## Push Image to ECR
+
+  # Deploy
+  ## Get Source
+  ## Login AWS
+  ## Edit Task Definition
+  ## Deploy
