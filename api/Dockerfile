@@ -1,13 +1,15 @@
-FROM golang:1.20 AS base
+FROM golang:1.20-alpine AS base
 CMD ["bash"]
 
 # test-and-build
 FROM base AS test-and-build
 COPY . /workspace
 WORKDIR /workspace
-RUN go test -v && go build main.go
+RUN go test -v && go build -o main .
 
 # production
 FROM alpine:latest AS production
-COPY --from=test-and-build /workspace/main .
+COPY --from=test-and-build /workspace/main /app/main
+WORKDIR /app
+
 CMD ["./main"]
