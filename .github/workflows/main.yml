@@ -56,7 +56,7 @@ jobs:
           ECR_ REPOSITORY: ${{ secrets.AWS_ECR_WEB_SERVER_REPOSITORY }}
           # イメージタグの付け替え
         run: |
-          docker image tag temp_web_image_name:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker image tag temp_api_image_name:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
   
   # API Container Build/Test
