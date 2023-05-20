@@ -1,4 +1,4 @@
-name: Delploy Simple CI/CD
+name: Deploy Simple CI/CD
 
 on:
   push:
@@ -9,8 +9,6 @@ env:
   ECS_SERVICE: simple-cicd-service
   ECS_CLUSTER: simple-cicd-cluster
   ECS_TASK_DEFINITION: .aws/task-definition.json
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 permissions:
   contents: read
@@ -18,7 +16,7 @@ permissions:
 jobs:
   # Web Container Build/Test
   web-test-build-image:
-    name: Web Container -Test and Build
+    name: Web Container - Test and Build
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     defaults:
@@ -67,7 +65,6 @@ jobs:
     defaults:
       run:
         working-directory: api
-      
     steps:
       ## Get Source
       - uses: actions/checkout@v3
@@ -77,8 +74,13 @@ jobs:
       - name: Build an Image and Run Tests
         run: |
           docker image build --target production -t temp_api_image_name:latest .
-      
       ## Login AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -113,7 +115,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: login to Amazon ECR
+      - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
   
