@@ -53,7 +53,7 @@ jobs:
         env:
           # ECR_REGISTRYはログイン後でないと取得できないので、temp_web_image_name:latestという仮のタグ名を付けている
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_ REPOSITORY: ${{ secrets.AWS_ECR_WEB_SERVER_REPOSITORY }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_WEB_SERVER_REPOSITORY }}
           # イメージタグの付け替え
         run: |
           docker image tag temp_web_image_name:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
