@@ -9,6 +9,8 @@ env:
   ECS_SERVICE: simple-cicd-service
   ECS_CLUSTER: simple-cicd-cluster
   ECS_TASK_DEFINITION: .aws/task-definition.json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 permissions:
   contents: read
