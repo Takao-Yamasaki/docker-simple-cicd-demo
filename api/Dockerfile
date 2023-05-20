@@ -9,5 +9,5 @@ RUN go test -v && go build main.go
 
 # production
 FROM alpine:latest AS production
-COPY --from=build /workspace/main .
+COPY --from=test-and-build /workspace/main .
 CMD ["./main"]
