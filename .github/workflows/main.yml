@@ -91,7 +91,52 @@ jobs:
           docker push $$ECR_REGISTRY/$ECR_REPOSITORY:latest
 
   # Deploy
-  ## Get Source
-  ## Login AWS
-  ## Edit Task Definition
-  ## Deploy
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    # イメージがないと、先にデプロイするものがないので、以下のジョブが終わった後に、実行
+    needs: [web-test-build-image, api-test-build-image]
+
+    ## Get Source
+    steps:
+      # ソースコードを引っ張ってくる
+      - name: actions/checkout
+        uses: actions/checkout@v3
+      
+      ## Login AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secret.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+  
+      ## Edit Task Definition
+      - name: Fill in the new image ID in the Amazon ECS task definition for web
+        id: render-web-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: web
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_WEB_SERVER_REPOSITORY }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition for api
+        id: render-api-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-web-task-def.outputs.task-definition }}
+          container-name: api
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_API_SERVER_REPOSITORY }}
+      
+      ## Deploy
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-api-task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
