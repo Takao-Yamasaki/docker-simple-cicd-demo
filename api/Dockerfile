@@ -9,7 +9,7 @@ WORKDIR /workspace
 RUN go test -v && go build -o main .
 
 # production
-FROM golang:1.20 AS production
+FROM ubuntu:latest AS production
 COPY --from=test-and-build /workspace/main /app/main
 WORKDIR /app
 
