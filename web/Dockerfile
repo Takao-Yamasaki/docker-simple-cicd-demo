@@ -1,4 +1,4 @@
-# 開発環境用
+# local
 FROM node:18 AS base
 CMD [ "bash" ]
 

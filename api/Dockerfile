@@ -1,4 +1,5 @@
-FROM golang:1.20-alpine AS base
+# local
+FROM golang:1.20 AS base
 CMD ["bash"]
 
 # test-and-build

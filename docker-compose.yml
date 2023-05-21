@@ -3,9 +3,11 @@ services:
   api:
     container_name: api
     build: ./api
+    # コンテナで入った時の作業ディレクトリを指定
+    working_dir: /workspace
     ports:
       - 8080:8080
-    # -tオプションと同じ。bashがすぐに終了するのを防ぐ
+    # コンテナ起動を継続させるため、-tの代わりに使用する。
     tty: true
     volumes:
       - ./api:/workspace:cashed
@@ -15,12 +17,15 @@ services:
     build: 
       context: ./web
       target: base
+    # コンテナで入った時の作業ディレクトリを指定
+    working_dir: /workspace
     ports:
       - 3000:3000
-    # -tオプションと同じ。bashがすぐに終了するのを防ぐ
-    tty: true
+    # Reactの${process.env.REACT_APP_API_SERVER}/hello`で使用している
     environment:
       - REACT_APP_API_SERVER=http://localhost:8080/api
+    # コンテナ起動を継続させるため、-tの代わりに使用する。
+    tty: true
     volumes:
       - ./web:/workspace:cashed
     depends_on:
