@@ -6,9 +6,15 @@ CMD ["bash"]
 FROM base AS test-and-build
 COPY . /workspace
 WORKDIR /workspace
-RUN go test -v && go build -o main .
+RUN go mod download
+
+# CGO_ENABLED=0: CGOを無効化する。静的バイナリを作成する際は無効化が推奨。
+# GOOS=linux: ターゲットOSをLinuxにする
+# -a -installsuffix: ビルドされたバイナリにCGOの情報を含める
+RUN go test -v && CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # production
 FROM alpine:latest AS production
 COPY --from=test-and-build /workspace/main /app/main
-CMD ["./main"]
+WORKDIR /app
+CMD [ "./main" ]

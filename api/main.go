@@ -9,6 +9,7 @@ import (
 func main() {
 	http.HandleFunc("/api/hello", helloHandler)
 
+	log.Printf("Server is running on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
