@@ -4,9 +4,7 @@ services:
     container_name: api
     build: 
       context: ./api
-      target: base
-    # コンテナで入った時の作業ディレクトリを指定
-    working_dir: /workspace
+      target: production
     ports:
       - 8080:8080
     # コンテナ起動を継続させるため、-tの代わりに使用する。
@@ -18,14 +16,11 @@ services:
     container_name: web
     build: 
       context: ./web
-      target: base
-    # コンテナで入った時の作業ディレクトリを指定
-    working_dir: /workspace
-    ports:
-      - 3000:3000
-    # Reactの${process.env.REACT_APP_API_SERVER}/hello`で使用している
-    environment:
+      target: production
+      args:
       - REACT_APP_API_SERVER=http://localhost:8080/api
+    ports:
+      - 3000:80
     # コンテナ起動を継続させるため、-tの代わりに使用する。
     tty: true
     volumes:
