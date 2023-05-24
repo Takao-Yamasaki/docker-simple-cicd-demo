@@ -11,6 +11,4 @@ RUN go test -v && go build -o main .
 # production
 FROM alpine:latest AS production
 COPY --from=test-and-build /workspace/main /app/main
-WORKDIR /app
-
-CMD ["/app/main"]
+CMD ["./main"]
