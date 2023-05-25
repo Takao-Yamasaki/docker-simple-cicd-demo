@@ -1,6 +1,6 @@
 # local
-FROM golang:1.20-alpine3.18 AS base
-CMD [ "/bin/sh" ]
+FROM golang:1.20 AS base
+CMD [ "bash" ]
 
 # test-and-build
 FROM base AS test-and-build
